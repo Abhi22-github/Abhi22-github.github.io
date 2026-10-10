@@ -118,7 +118,7 @@ fun FlatButton(
             style == ButtonStyle.Solid && isHovered -> Flat.Coral
             style == ButtonStyle.Solid -> color
             isHovered -> color
-            else -> Color.Transparent
+            else -> color.copy(alpha = 0f)
         },
     )
     val fg by animateColorAsState(

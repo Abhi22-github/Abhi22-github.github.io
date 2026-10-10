@@ -42,7 +42,9 @@ fun NavBar(
     active: Section,
     onNavigate: (Section) -> Unit,
 ) {
-    val bg by animateColorAsState(if (scrolled) Flat.Paper else Color.Transparent)
+    // Fade to a transparent *paper* colour, not Color.Transparent (transparent black),
+    // otherwise the in-between frames flash dark grey.
+    val bg by animateColorAsState(if (scrolled) Flat.Paper else Flat.Paper.copy(alpha = 0f))
     val vPad by animateDpAsState(if (scrolled) 12.dp else 22.dp)
     Column(Modifier.fillMaxWidth().background(bg)) {
         Row(
@@ -90,7 +92,7 @@ private fun NavLink(text: String, selected: Boolean, onClick: () -> Unit) {
         when {
             selected -> Flat.Ink
             hovered -> Flat.PaperDeep
-            else -> Color.Transparent
+            else -> Flat.PaperDeep.copy(alpha = 0f)
         },
     )
     Text(
