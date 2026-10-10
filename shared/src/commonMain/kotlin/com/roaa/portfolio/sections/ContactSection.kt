@@ -48,6 +48,7 @@ import com.roaa.portfolio.components.handClick
 import com.roaa.portfolio.components.link
 import com.roaa.portfolio.components.rememberHoverSource
 import com.roaa.portfolio.data.Profile
+import com.roaa.portfolio.data.playApps
 import com.roaa.portfolio.theme.Flat
 import com.roaa.portfolio.theme.body
 import com.roaa.portfolio.theme.display
@@ -61,7 +62,7 @@ private val contactLinks = listOf(
     ContactLink("Email", "Send me a message", "mailto:${Profile.EMAIL}", Flat.Coral, Glyph.Mail),
     ContactLink("GitHub", "@Abhi22-github", Profile.GITHUB, Flat.Ink, Glyph.Code),
     ContactLink("LinkedIn", "abhishek-satpute", Profile.LINKEDIN, Flat.Blue, Glyph.LinkedIn),
-    ContactLink("Google Play", "Developer: ${Profile.PUBLISHER}", Profile.PLAY_STORE, Flat.Mint, Glyph.Play),
+    ContactLink("Google Play", "${playApps.size} apps live", Profile.PLAY_STORE, Flat.Mint, Glyph.Play),
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -96,7 +97,7 @@ fun ContactSection(compact: Boolean) {
                 )
                 Spacer(Modifier.height(22.dp))
                 Text(
-                    "A project, a role, or just a chat about Kotlin — my inbox is open.",
+                    "A project, a role, or just a chat about apps — my inbox is open.",
                     style = body(if (compact) 16.sp else 20.sp, Flat.Sky),
                     modifier = Modifier.fillMaxWidth(if (compact) 1f else 0.6f),
                 )
@@ -194,7 +195,7 @@ fun Footer(compact: Boolean, onBackToTop: () -> Unit) {
     val content: @Composable () -> Unit = {
         Column {
             Text("© 2026 ${Profile.NAME}", style = body(14.sp, Flat.Ink, FontWeight.SemiBold))
-            Text("Built with Kotlin, Compose Multiplatform & WebAssembly.", style = body(13.sp))
+            Text("Built with Compose Multiplatform & WebAssembly.", style = body(13.sp))
         }
         Row(
             Modifier.hoverable(source).handClick(onBackToTop),

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -19,6 +20,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -67,6 +69,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.roaa.portfolio.components.ButtonStyle
 import com.roaa.portfolio.components.FlatButton
+import com.roaa.portfolio.components.handClick
+import com.roaa.portfolio.components.rememberHoverSource
 import com.roaa.portfolio.data.Profile
 import com.roaa.portfolio.data.playApps
 import com.roaa.portfolio.theme.Flat
@@ -112,7 +116,11 @@ fun HeroSection(compact: Boolean, onExploreApps: () -> Unit, onContact: () -> Un
     val parallax by animateOffsetAsState(pointer, spring(stiffness = 60f))
 
     val t = rememberInfiniteTransition()
-    val time by t.animateFloat(0f, (2 * PI).toFloat(), infiniteRepeatable(tween(9000, easing = LinearEasing)))
+    val time by t.animateFloat(
+        0f,
+        (2 * PI).toFloat(),
+        infiniteRepeatable(tween(9000, easing = LinearEasing))
+    )
 
     BoxWithConstraints(
         Modifier
@@ -134,22 +142,35 @@ fun HeroSection(compact: Boolean, onExploreApps: () -> Unit, onContact: () -> Un
                 val drift = sin(time + s.phase) * 14.dp.toPx()
                 val cx = s.x * size.width + parallax.x * 26.dp.toPx() * s.depth
                 val cy = s.y * size.height + drift + parallax.y * 26.dp.toPx() * s.depth
-                drawFlatShape(s.kind, s.color, Offset(cx, cy), px, rotation = (time + s.phase) * 57.3f * 0.5f)
+                drawFlatShape(
+                    s.kind,
+                    s.color,
+                    Offset(cx, cy),
+                    px,
+                    rotation = (time + s.phase) * 57.3f * 0.5f
+                )
             }
         }
 
         if (compact) {
             Column(
-                Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 110.dp, bottom = 64.dp),
+                Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                    .padding(top = 110.dp, bottom = 64.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
-                HeroVisual(diameter = 290.dp, time = time, parallax = parallax, modifier = Modifier.align(Alignment.CenterHorizontally))
+                HeroVisual(
+                    diameter = 290.dp,
+                    time = time,
+                    parallax = parallax,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
                 Spacer(Modifier.height(36.dp))
                 HeroCopy(compact = true, onExploreApps, onContact)
             }
         } else {
             Row(
-                Modifier.fillMaxWidth().padding(horizontal = 48.dp).padding(top = 150.dp, bottom = 110.dp),
+                Modifier.fillMaxWidth().padding(horizontal = 48.dp)
+                    .padding(top = 150.dp, bottom = 110.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(Modifier.weight(1.15f)) { HeroCopy(compact = false, onExploreApps, onContact) }
@@ -182,7 +203,8 @@ private fun HeroCopy(compact: Boolean, onExploreApps: () -> Unit, onContact: () 
 
     Column {
         Row(
-            Modifier.entrance(0).background(Flat.Ink, RoundedCornerShape(50)).padding(horizontal = 14.dp, vertical = 8.dp),
+            Modifier.entrance(0).background(Flat.Ink, RoundedCornerShape(50))
+                .padding(horizontal = 14.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             LiveDot()
@@ -190,9 +212,17 @@ private fun HeroCopy(compact: Boolean, onExploreApps: () -> Unit, onContact: () 
             Text("3 apps live on Google Play", style = body(13.sp, Flat.White, FontWeight.Medium))
         }
         Spacer(Modifier.height(28.dp))
-        Text("Hi, I'm", style = display(if (compact) 26.sp else 34.sp, Flat.InkSoft, FontWeight.Medium), modifier = Modifier.entrance(1))
+        Text(
+            "Hi, I'm",
+            style = display(if (compact) 26.sp else 34.sp, Flat.InkSoft, FontWeight.Medium),
+            modifier = Modifier.entrance(1)
+        )
         Spacer(Modifier.height(6.dp))
-        Text(Profile.NAME, style = display(if (compact) 50.sp else 84.sp), modifier = Modifier.entrance(2))
+        Text(
+            Profile.NAME,
+            style = display(if (compact) 50.sp else 84.sp),
+            modifier = Modifier.entrance(2)
+        )
         Spacer(Modifier.height(18.dp))
         Box(Modifier.entrance(3)) { RoleRotator(compact) }
         Spacer(Modifier.height(24.dp))
@@ -208,10 +238,19 @@ private fun HeroCopy(compact: Boolean, onExploreApps: () -> Unit, onContact: () 
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             FlatButton("Explore my apps", onExploreApps, color = Flat.Blue)
-            FlatButton("Say hello", onContact, color = Flat.Ink, style = ButtonStyle.Outline, showArrow = false)
+            FlatButton(
+                "Say hello",
+                onContact,
+                color = Flat.Ink,
+                style = ButtonStyle.Outline,
+                showArrow = false
+            )
         }
         Spacer(Modifier.height(48.dp))
-        Row(Modifier.entrance(5), horizontalArrangement = Arrangement.spacedBy(if (compact) 24.dp else 44.dp)) {
+        Row(
+            Modifier.entrance(5),
+            horizontalArrangement = Arrangement.spacedBy(if (compact) 24.dp else 44.dp)
+        ) {
             CountUpStat(playApps.size, "", "Apps on\nGoogle Play", compact)
             CountUpStat(1, "K+", "Downloads\nand counting", compact)
             CountUpStat(Profile.PUBLIC_REPOS, "+", "Open-source\nrepos", compact)
@@ -276,6 +315,50 @@ private fun CountUpStat(target: Int, suffix: String, caption: String, compact: B
     }
 }
 
+/**
+ * Photo on the front, the clay 3D avatar on the back. Hover (desktop) or tap
+ * (touch) flips the card around its vertical axis.
+ */
+@Composable
+private fun FlipAvatar(size: Dp, look: Offset) {
+    val (source, hoveredState) = rememberHoverSource()
+    val hovered by hoveredState
+    var tapped by remember { mutableStateOf(false) }
+    val rotation by animateFloatAsState(
+        targetValue = if (hovered != tapped) 180f else 0f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 140f),
+    )
+    val faceModifier = Modifier.fillMaxSize().clip(CircleShape).background(Flat.Sky)
+    Box(
+        Modifier
+            .size(size)
+            .hoverable(source)
+            .handClick { tapped = !tapped }
+            .graphicsLayer {
+                rotationY = rotation
+                cameraDistance = 14f * density
+            },
+    ) {
+        Image(
+            painterResource(Res.drawable.avatar),
+            contentDescription = Profile.NAME,
+            contentScale = ContentScale.Crop,
+            modifier = faceModifier,
+        )
+//        if (rotation <= 90f) {
+//            Image(
+//                painterResource(Res.drawable.avatar),
+//                contentDescription = Profile.NAME,
+//                contentScale = ContentScale.Crop,
+//                modifier = faceModifier,
+//            )
+//        } else {
+//            // Counter-rotate so the back face isn't mirrored.
+//            Avatar3D(look, faceModifier.graphicsLayer { rotationY = 180f })
+//        }
+    }
+}
+
 @Composable
 private fun HeroVisual(diameter: Dp, time: Float, parallax: Offset, modifier: Modifier = Modifier) {
     val pop = remember { Animatable(0f) }
@@ -291,22 +374,28 @@ private fun HeroVisual(diameter: Dp, time: Float, parallax: Offset, modifier: Mo
     ) {
         // Solid blob + rotating dashed orbit
         Canvas(Modifier.fillMaxSize()) {
-            drawCircle(Flat.Blue, radius = size.minDimension * 0.4f, center = center + Offset(size.width * 0.04f, size.height * 0.04f))
-            drawCircle(Flat.Yellow, radius = size.minDimension * 0.4f, center = center - Offset(size.width * 0.03f, size.height * 0.03f))
+            drawCircle(
+                Flat.Blue,
+                radius = size.minDimension * 0.4f,
+                center = center + Offset(size.width * 0.04f, size.height * 0.04f)
+            )
+            drawCircle(
+                Flat.Yellow,
+                radius = size.minDimension * 0.4f,
+                center = center - Offset(size.width * 0.03f, size.height * 0.03f)
+            )
             rotate(time * 57.3f / 3f) {
                 drawCircle(
                     Flat.Ink,
                     radius = size.minDimension * 0.48f,
-                    style = Stroke(2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 14f))),
+                    style = Stroke(
+                        2.dp.toPx(),
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 14f))
+                    ),
                 )
             }
         }
-        Image(
-            painterResource(Res.drawable.avatar),
-            contentDescription = Profile.NAME,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(diameter * 0.66f).clip(CircleShape).background(Flat.Sky),
-        )
+        FlipAvatar(diameter * 0.66f, parallax)
         // Shipped app icons orbit the photo.
         val radius = diameter * 0.48f
         playApps.forEachIndexed { i, app ->
@@ -316,7 +405,12 @@ private fun HeroVisual(diameter: Dp, time: Float, parallax: Offset, modifier: Mo
                 painterResource(app.icon),
                 contentDescription = app.name,
                 modifier = Modifier
-                    .offset { IntOffset((cos(angle) * radius.toPx()).roundToInt(), (sin(angle) * radius.toPx()).roundToInt()) }
+                    .offset {
+                        IntOffset(
+                            (cos(angle) * radius.toPx()).roundToInt(),
+                            (sin(angle) * radius.toPx()).roundToInt()
+                        )
+                    }
                     .size(iconSize)
                     .background(Flat.Paper, RoundedCornerShape(28))
                     .padding(4.dp)
@@ -324,15 +418,22 @@ private fun HeroVisual(diameter: Dp, time: Float, parallax: Offset, modifier: Mo
             )
         }
         Text(
-            "ROAA",
+            "ANDROID DEV",
             style = label(12.sp, Flat.White),
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = diameter * 0.04f)
-                .background(Flat.Ink, RoundedCornerShape(50)).padding(horizontal = 14.dp, vertical = 7.dp),
+                .background(Flat.Ink, RoundedCornerShape(50))
+                .padding(horizontal = 14.dp, vertical = 7.dp),
         )
     }
 }
 
-private fun DrawScope.drawFlatShape(kind: ShapeKind, color: Color, center: Offset, size: Float, rotation: Float) {
+private fun DrawScope.drawFlatShape(
+    kind: ShapeKind,
+    color: Color,
+    center: Offset,
+    size: Float,
+    rotation: Float
+) {
     translate(center.x, center.y) {
         rotate(rotation, pivot = Offset.Zero) {
             val h = size / 2
@@ -341,19 +442,29 @@ private fun DrawScope.drawFlatShape(kind: ShapeKind, color: Color, center: Offse
                 ShapeKind.Square -> drawRect(color, Offset(-h, -h), Size(size, size))
                 ShapeKind.Ring -> drawCircle(color, h, Offset.Zero, style = Stroke(size * 0.22f))
                 ShapeKind.Triangle -> drawPath(
-                    Path().apply { moveTo(0f, -h); lineTo(h, h * 0.8f); lineTo(-h, h * 0.8f); close() },
+                    Path().apply {
+                        moveTo(0f, -h); lineTo(h, h * 0.8f); lineTo(
+                        -h,
+                        h * 0.8f
+                    ); close()
+                    },
                     color,
                 )
+
                 ShapeKind.Plus -> {
                     val t = size * 0.3f
                     drawRect(color, Offset(-t / 2, -h), Size(t, size))
                     drawRect(color, Offset(-h, -t / 2), Size(size, t))
                 }
+
                 ShapeKind.Zigzag -> {
                     val p = Path()
                     val steps = 4
                     p.moveTo(-h, 0f)
-                    for (i in 1..steps) p.lineTo(-h + size * i / steps, if (i % 2 == 1) -h * 0.4f else 0f)
+                    for (i in 1..steps) p.lineTo(
+                        -h + size * i / steps,
+                        if (i % 2 == 1) -h * 0.4f else 0f
+                    )
                     drawPath(p, color, style = Stroke(size * 0.12f))
                 }
             }

@@ -59,7 +59,7 @@ fun WebsitesSection(compact: Boolean) {
             index = "02",
             eyebrow = "Websites",
             title = "Built for the browser.",
-            subtitle = "Kotlin doesn't stop at Android — these run on the web.",
+            subtitle = "Not just Android — I build for the browser too.",
             compact = compact,
             accent = Flat.Mint,
         )

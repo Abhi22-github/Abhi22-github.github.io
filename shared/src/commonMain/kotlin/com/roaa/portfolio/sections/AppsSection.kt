@@ -56,7 +56,7 @@ fun AppsSection(compact: Boolean) {
             index = "01",
             eyebrow = "Apps",
             title = "Shipped to Google Play.",
-            subtitle = "Real products with real users — designed, built and published end-to-end under my publisher name, ${Profile.PUBLISHER}.",
+            subtitle = "Real products with real users — designed, built and published end-to-end by me.",
             compact = compact,
         )
         playApps.forEachIndexed { i, app ->
@@ -67,7 +67,7 @@ fun AppsSection(compact: Boolean) {
         Reveal {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 FlatButton(
-                    "See all apps by ${Profile.PUBLISHER}",
+                    "See all my apps on Google Play",
                     onClick = { uri.openUri(Profile.PLAY_STORE) },
                     style = ButtonStyle.Outline,
                 )
@@ -153,7 +153,7 @@ private fun AppDetails(app: PlayApp, index: Int, compact: Boolean, modifier: Mod
             Spacer(Modifier.width(16.dp))
             Column(Modifier.weight(1f)) {
                 Text(app.name, style = display(if (compact) 22.sp else 26.sp))
-                Text("${Profile.PUBLISHER} · Updated ${app.updated}", style = body(13.sp))
+                Text("Android · Updated ${app.updated}", style = body(13.sp))
             }
             Text(
                 "0${index + 1}",

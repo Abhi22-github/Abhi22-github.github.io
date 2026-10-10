@@ -19,7 +19,6 @@ object Profile {
     const val GITHUB = "https://github.com/Abhi22-github"
     const val LINKEDIN = "https://www.linkedin.com/in/abhishek-satpute"
     const val PLAY_STORE = "https://play.google.com/store/apps/developer?id=ROAA"
-    const val PUBLISHER = "ROAA"
     const val PUBLIC_REPOS = 20
 
     val roles = listOf(
@@ -30,9 +29,9 @@ object Profile {
     )
 
     const val INTRO =
-        "I design, build and ship Android apps end-to-end under my own publisher, ROAA — " +
-            "from the first Compose screen to the Play Store listing. Lately I'm taking Kotlin " +
-            "everywhere: iOS, desktop and the web page you're looking at."
+        "I build Android apps that people actually use — taking each one from a rough idea " +
+            "to a polished product on Google Play. I care about clean design, speed and privacy, " +
+            "and I love turning everyday problems into simple tools that just work."
 
     val skills = listOf(
         "Kotlin", "Jetpack Compose", "Compose Multiplatform", "Kotlin/Wasm", "Media3 · ExoPlayer",
@@ -129,10 +128,10 @@ val websites = listOf(
     ),
     Website(
         name = "This Portfolio",
-        url = "https://abhi22-github.github.io",
-        displayUrl = "abhi22-github.github.io",
-        description = "The site you're on — 100% Kotlin. Compose Multiplatform compiled to " +
-            "WebAssembly, with every animation written in Compose.",
+        url = "https://abhi22-github.github.io/Portfolio/",
+        displayUrl = "abhi22-github.github.io/Portfolio",
+        description = "The site you're on — a single-page portfolio built with Compose " +
+            "Multiplatform and compiled to WebAssembly, with every animation hand-crafted.",
         stack = listOf("Compose Multiplatform", "Kotlin/Wasm", "GitHub Pages"),
         accent = Flat.Coral,
     ),
