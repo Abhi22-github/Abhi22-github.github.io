@@ -128,8 +128,8 @@ val websites = listOf(
     ),
     Website(
         name = "This Portfolio",
-        url = "https://abhi22-github.github.io/Portfolio/",
-        displayUrl = "abhi22-github.github.io/Portfolio",
+        url = "https://abhi22-github.github.io/",
+        displayUrl = "abhi22-github.github.io",
         description = "The site you're on — a single-page portfolio built with Compose " +
             "Multiplatform and compiled to WebAssembly, with every animation hand-crafted.",
         stack = listOf("Compose Multiplatform", "Kotlin/Wasm", "GitHub Pages"),
