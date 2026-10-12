@@ -21,6 +21,9 @@ object Profile {
     const val PLAY_STORE = "https://play.google.com/store/apps/developer?id=ROAA"
     const val PUBLIC_REPOS = 20
 
+    /** Served from webApp resources, next to index.html. */
+    const val RESUME = "Abhishek_Satpute_Resume.pdf"
+
     val roles = listOf(
         "Android Developer",
         "Self-Taught Developer",

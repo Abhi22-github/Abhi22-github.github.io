@@ -47,6 +47,9 @@ import com.roaa.portfolio.components.Reveal
 import com.roaa.portfolio.components.handClick
 import com.roaa.portfolio.components.link
 import com.roaa.portfolio.components.rememberHoverSource
+import androidx.compose.ui.platform.LocalUriHandler
+import com.roaa.portfolio.components.ButtonStyle
+import com.roaa.portfolio.components.FlatButton
 import com.roaa.portfolio.data.Profile
 import com.roaa.portfolio.data.playApps
 import com.roaa.portfolio.theme.Flat
@@ -68,6 +71,7 @@ private val contactLinks = listOf(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ContactSection(compact: Boolean) {
+    val uri = LocalUriHandler.current
     val t = rememberInfiniteTransition()
     val spin by t.animateFloat(0f, 360f, infiniteRepeatable(tween(20000, easing = LinearEasing)))
 
@@ -102,7 +106,21 @@ fun ContactSection(compact: Boolean) {
                     modifier = Modifier.fillMaxWidth(if (compact) 1f else 0.6f),
                 )
                 Spacer(Modifier.height(32.dp))
-                EmailPill(compact)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    itemVerticalAlignment = Alignment.CenterVertically,
+                ) {
+                    EmailPill(compact)
+                    FlatButton(
+                        "Download résumé",
+                        { uri.openUri(Profile.RESUME) },
+                        color = Flat.White,
+                        contentColor = Flat.Blue,
+                        style = ButtonStyle.Outline,
+                        arrowDown = true,
+                    )
+                }
                 Spacer(Modifier.height(if (compact) 32.dp else 48.dp))
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(14.dp),

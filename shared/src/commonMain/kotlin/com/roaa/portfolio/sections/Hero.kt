@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalUriHandler
 import com.roaa.portfolio.components.ButtonStyle
 import com.roaa.portfolio.components.FlatButton
 import com.roaa.portfolio.components.handClick
@@ -186,6 +187,7 @@ fun HeroSection(compact: Boolean, onExploreApps: () -> Unit, onContact: () -> Un
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun HeroCopy(compact: Boolean, onExploreApps: () -> Unit, onContact: () -> Unit) {
+    val uri = LocalUriHandler.current
     // Staggered entrance for each line of the hero copy.
     val enter = remember { List(6) { Animatable(0f) } }
     LaunchedEffect(Unit) {
@@ -244,6 +246,13 @@ private fun HeroCopy(compact: Boolean, onExploreApps: () -> Unit, onContact: () 
                 color = Flat.Ink,
                 style = ButtonStyle.Outline,
                 showArrow = false
+            )
+            FlatButton(
+                "Download résumé",
+                { uri.openUri(Profile.RESUME) },
+                color = Flat.Ink,
+                style = ButtonStyle.Outline,
+                arrowDown = true,
             )
         }
         Spacer(Modifier.height(48.dp))

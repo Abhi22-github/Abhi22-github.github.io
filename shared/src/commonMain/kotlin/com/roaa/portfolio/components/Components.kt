@@ -110,6 +110,7 @@ fun FlatButton(
     contentColor: Color = Flat.White,
     style: ButtonStyle = ButtonStyle.Solid,
     showArrow: Boolean = true,
+    arrowDown: Boolean = false,
 ) {
     val (source, hovered) = rememberHoverSource()
     val isHovered by hovered
@@ -141,7 +142,17 @@ fun FlatButton(
         Text(text, style = body(15.sp, fg, FontWeight.SemiBold))
         if (showArrow) {
             Spacer(Modifier.width(10.dp))
-            ArrowIcon(fg, Modifier.size(16.dp).graphicsLayer { translationX = arrowShift * 5.dp.toPx() })
+            ArrowIcon(
+                fg,
+                Modifier.size(16.dp).graphicsLayer {
+                    if (arrowDown) {
+                        rotationZ = 90f
+                        translationY = arrowShift * 4.dp.toPx()
+                    } else {
+                        translationX = arrowShift * 5.dp.toPx()
+                    }
+                },
+            )
         }
     }
 }
