@@ -2,9 +2,8 @@ package com.roaa.portfolio.sections
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.MarqueeSpacing
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.border
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.roaa.portfolio.components.ArrowIcon
@@ -45,36 +47,85 @@ import com.roaa.portfolio.data.projects
 import com.roaa.portfolio.theme.Flat
 import com.roaa.portfolio.theme.body
 import com.roaa.portfolio.theme.display
+import com.roaa.portfolio.theme.label
 
-/** Infinite skills ticker on a slightly tilted ink band. */
+/** Static skills band: one row per résumé group, chips fill with the group's accent on hover. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SkillsMarquee(compact: Boolean) {
-    val dots = listOf(Flat.Yellow, Flat.Coral, Flat.Mint, Flat.Blue, Flat.Violet, Flat.Amber)
+fun SkillsBand(compact: Boolean) {
+    val gap = if (compact) 8.dp else 10.dp
     Box(
         Modifier
             .fillMaxWidth()
-            .graphicsLayer {
-                rotationZ = -2f
-                scaleX = 1.06f
-            }
             .background(Flat.Ink)
-            .padding(vertical = if (compact) 18.dp else 26.dp),
+            .padding(horizontal = if (compact) 20.dp else 48.dp, vertical = if (compact) 36.dp else 56.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        Row(
-            Modifier.fillMaxWidth().basicMarquee(iterations = Int.MAX_VALUE, velocity = 70.dp, repeatDelayMillis = 0, spacing = MarqueeSpacing(0.dp)),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            Modifier.widthIn(max = 1240.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(if (compact) 22.dp else 18.dp),
         ) {
-            repeat(2) {
-                Profile.skills.forEachIndexed { i, skill ->
-                    Text(skill, style = display(if (compact) 22.sp else 32.sp, Flat.White), softWrap = false)
-                    Box(
-                        Modifier.padding(horizontal = if (compact) 18.dp else 28.dp)
-                            .size(if (compact) 12.dp else 16.dp)
-                            .background(dots[i % dots.size], if (i % 2 == 0) CircleShape else RoundedCornerShape(3.dp)),
-                    )
+            Text("SKILLS & TOOLS", style = label(13.sp, Flat.Sky), modifier = Modifier.padding(bottom = if (compact) 0.dp else 10.dp))
+            Profile.skills.forEachIndexed { row, group ->
+                Reveal(delayMillis = row * 70, distance = 20.dp) {
+                    val chips: @Composable () -> Unit = {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(gap), verticalArrangement = Arrangement.spacedBy(gap)) {
+                            group.items.forEachIndexed { i, skill ->
+                                SkillChip(skill, group.accent, square = i % 2 == 1, compact = compact)
+                            }
+                        }
+                    }
+                    if (compact) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            GroupLabel(group.title, group.accent)
+                            chips()
+                        }
+                    } else {
+                        Row {
+                            Box(Modifier.width(170.dp).padding(top = 12.dp)) { GroupLabel(group.title, group.accent) }
+                            chips()
+                        }
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun GroupLabel(title: String, accent: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(8.dp).background(accent, CircleShape))
+        Spacer(Modifier.width(10.dp))
+        Text(title.uppercase(), style = label(12.sp, Flat.White))
+    }
+}
+
+@Composable
+private fun SkillChip(text: String, accent: Color, square: Boolean, compact: Boolean) {
+    val (source, hoveredState) = rememberHoverSource()
+    val hovered by hoveredState
+    val onAccent = if (accent == Flat.Yellow || accent == Flat.Amber || accent == Flat.Mint) Flat.Ink else Flat.White
+    val bg by animateColorAsState(if (hovered) accent else Flat.White.copy(alpha = 0.06f))
+    val fg by animateColorAsState(if (hovered) onAccent else Flat.White)
+    val dot by animateColorAsState(if (hovered) onAccent else accent)
+    val lift by animateFloatAsState(if (hovered) 1f else 0f)
+    Row(
+        Modifier
+            .hoverable(source)
+            .graphicsLayer { translationY = -lift * 4.dp.toPx() }
+            .background(bg, RoundedCornerShape(50))
+            .border(1.5.dp, if (hovered) accent else Flat.White.copy(alpha = 0.16f), RoundedCornerShape(50))
+            .padding(horizontal = if (compact) 14.dp else 18.dp, vertical = if (compact) 8.dp else 9.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier.size(if (compact) 9.dp else 11.dp)
+                .graphicsLayer { rotationZ = lift * 45f }
+                .background(dot, if (square) RoundedCornerShape(2.dp) else CircleShape),
+        )
+        Spacer(Modifier.width(if (compact) 8.dp else 10.dp))
+        Text(text, style = display(if (compact) 14.sp else 16.sp, fg, FontWeight.Medium), softWrap = false)
     }
 }
 

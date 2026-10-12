@@ -33,12 +33,26 @@ object Profile {
             "to a polished product on Google Play. I care about clean design, speed and privacy, " +
             "and I love turning everyday problems into simple tools that just work."
 
+    /** Grouped as on the résumé; each group gets one accent colour in the skills band. */
     val skills = listOf(
-        "Kotlin", "Jetpack Compose", "Compose Multiplatform", "Kotlin/Wasm", "Media3 · ExoPlayer",
-        "Room", "Coroutines & Flow", "Material 3", "Clean Architecture", "Modularization",
-        "Biometrics", "Autofill Framework", "Swift", "Java", "Firebase", "Play Console",
+        SkillGroup("Languages", Flat.Yellow, listOf("Kotlin", "Java", "Swift")),
+        SkillGroup(
+            "Android",
+            Flat.Mint,
+            listOf("Jetpack Compose", "Android SDK", "Kotlin Multiplatform", "Coroutines & Flow", "Hilt", "Dagger 2", "RxJava", "Retrofit", "Gson", "WebSockets"),
+        ),
+        SkillGroup("Architecture", Flat.Blue, listOf("MVVM", "Clean Architecture", "Modularization", "Offline-first")),
+        SkillGroup("Data", Flat.Coral, listOf("Room", "SQLite", "Firebase", "MongoDB", "Realm")),
+        SkillGroup("Testing", Flat.Violet, listOf("JUnit", "Mockito", "Espresso", "Compose Testing")),
+        SkillGroup(
+            "Tools",
+            Flat.Amber,
+            listOf("Git", "Jenkins CI/CD", "Docker", "Linux & Shell", "Gradle", "Android Studio", "SonarQube", "Jira", "Figma", "UI/UX Design"),
+        ),
     )
 }
+
+data class SkillGroup(val title: String, val accent: Color, val items: List<String>)
 
 enum class MockKind { VideoPlayer, PasswordVault, ExpenseChart }
 

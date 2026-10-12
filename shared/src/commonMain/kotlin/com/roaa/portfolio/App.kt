@@ -32,7 +32,7 @@ import com.roaa.portfolio.sections.Footer
 import com.roaa.portfolio.sections.HeroSection
 import com.roaa.portfolio.sections.NavBar
 import com.roaa.portfolio.sections.Section
-import com.roaa.portfolio.sections.SkillsMarquee
+import com.roaa.portfolio.sections.SkillsBand
 import com.roaa.portfolio.sections.WebsitesSection
 import com.roaa.portfolio.sections.WorkSection
 import com.roaa.portfolio.theme.Flat
@@ -100,7 +100,7 @@ private fun Portfolio() {
                     onContact = { navigate(Section.Contact) },
                 )
             }
-            SkillsMarquee(compact)
+            SkillsBand(compact)
             Spacer(Modifier.height(gap))
 
             val contentModifier = Modifier.widthIn(max = MaxContentWidth).fillMaxWidth().padding(horizontal = gutter)
