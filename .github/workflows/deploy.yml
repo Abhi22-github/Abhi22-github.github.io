@@ -24,11 +24,14 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build Wasm site
-        run: ./gradlew :webApp:wasmJsBrowserDistribution
+      # Wasm for modern browsers, with an automatic JS fallback for older ones (e.g. iOS < 18.2).
+      - name: Build site
+        run: ./gradlew :webApp:composeCompatibilityBrowserDistribution
+      - name: Drop source maps
+        run: find webApp/build/dist/composeWebCompatibility/productionExecutable -name "*.map" -delete
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: webApp/build/dist/wasmJs/productionExecutable
+          path: webApp/build/dist/composeWebCompatibility/productionExecutable
 
   deploy:
     needs: build

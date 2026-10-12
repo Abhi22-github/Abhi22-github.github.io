@@ -153,20 +153,22 @@ fun HeroSection(compact: Boolean, onExploreApps: () -> Unit, onContact: () -> Un
             }
         }
 
-        if (compact) {
+        // Phones and portrait tablets are too narrow for copy + visual side by side.
+        val stacked = compact || maxWidth < 960.dp
+        if (stacked) {
             Column(
-                Modifier.fillMaxWidth().padding(horizontal = 20.dp)
-                    .padding(top = 110.dp, bottom = 64.dp),
+                Modifier.fillMaxWidth().padding(horizontal = if (compact) 20.dp else 48.dp)
+                    .padding(top = if (compact) 110.dp else 140.dp, bottom = if (compact) 64.dp else 96.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
                 HeroVisual(
-                    diameter = 290.dp,
+                    diameter = if (compact) 290.dp else 360.dp,
                     time = time,
                     parallax = parallax,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                Spacer(Modifier.height(36.dp))
-                HeroCopy(compact = true, onExploreApps, onContact)
+                Spacer(Modifier.height(if (compact) 36.dp else 48.dp))
+                HeroCopy(compact = compact, onExploreApps, onContact)
             }
         } else {
             Row(

@@ -3,7 +3,9 @@ package com.roaa.portfolio.sections
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,8 +63,8 @@ fun NavBar(
                     Text(".", style = display(20.sp, Flat.Coral))
                 }
             }
-            Spacer(Modifier.weight(1f))
             if (!compact) {
+                Spacer(Modifier.weight(1f))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                     listOf(Section.Apps, Section.Websites, Section.Work).forEach {
                         NavLink(it.title, selected = active == it) { onNavigate(it) }
@@ -71,10 +73,16 @@ fun NavBar(
                     ContactChip { onNavigate(Section.Contact) }
                 }
             } else {
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-                    NavLink("Apps", selected = active == Section.Apps) { onNavigate(Section.Apps) }
-                    ContactChip { onNavigate(Section.Contact) }
+                // Every section stays reachable on phones; the links scroll sideways if a narrow screen can't fit them.
+                Box(Modifier.weight(1f).padding(start = 8.dp), contentAlignment = Alignment.CenterEnd) {
+                    Row(Modifier.horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically) {
+                        listOf(Section.Apps, Section.Websites, Section.Work).forEach {
+                            NavLink(it.title, selected = active == it, compact = true) { onNavigate(it) }
+                        }
+                    }
                 }
+                Spacer(Modifier.width(4.dp))
+                ContactChip(compact = true) { onNavigate(Section.Contact) }
             }
         }
         // Scroll progress
@@ -85,7 +93,7 @@ fun NavBar(
 }
 
 @Composable
-private fun NavLink(text: String, selected: Boolean, onClick: () -> Unit) {
+private fun NavLink(text: String, selected: Boolean, compact: Boolean = false, onClick: () -> Unit) {
     val (source, hoveredState) = rememberHoverSource()
     val hovered by hoveredState
     val bg by animateColorAsState(
@@ -97,28 +105,30 @@ private fun NavLink(text: String, selected: Boolean, onClick: () -> Unit) {
     )
     Text(
         text,
-        style = body(15.sp, if (selected) Flat.White else Flat.Ink, FontWeight.SemiBold),
+        style = body(if (compact) 13.sp else 15.sp, if (selected) Flat.White else Flat.Ink, FontWeight.SemiBold),
+        softWrap = false,
         modifier = Modifier
             .hoverable(source)
             .handClick(onClick)
             .background(bg, RoundedCornerShape(50))
-            .padding(horizontal = 16.dp, vertical = 9.dp),
+            .padding(horizontal = if (compact) 10.dp else 16.dp, vertical = if (compact) 7.dp else 9.dp),
     )
 }
 
 @Composable
-private fun ContactChip(onClick: () -> Unit) {
+private fun ContactChip(compact: Boolean = false, onClick: () -> Unit) {
     val (source, hoveredState) = rememberHoverSource()
     val hovered by hoveredState
     val bg by animateColorAsState(if (hovered) Flat.Ink else Flat.Coral)
     Text(
         "Let's talk",
-        style = body(15.sp, Flat.White, FontWeight.SemiBold),
+        style = body(if (compact) 13.sp else 15.sp, Flat.White, FontWeight.SemiBold),
+        softWrap = false,
         modifier = Modifier
             .widthIn(min = 0.dp)
             .hoverable(source)
             .handClick(onClick)
             .background(bg, RoundedCornerShape(50))
-            .padding(horizontal = 18.dp, vertical = 9.dp),
+            .padding(horizontal = if (compact) 12.dp else 18.dp, vertical = if (compact) 7.dp else 9.dp),
     )
 }

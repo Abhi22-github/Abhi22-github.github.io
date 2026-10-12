@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -102,17 +103,25 @@ private fun AppShowcase(app: PlayApp, index: Int, compact: Boolean, flipped: Boo
         }
     }
 
-    Box(
+    BoxWithConstraints(
         Modifier
             .fillMaxWidth()
             .hoverable(source)
             .background(app.accentSoft, RoundedCornerShape(36.dp))
             .padding(if (compact) 14.dp else 20.dp),
     ) {
-        if (compact) {
+        // Portrait tablets don't have room for details beside the phone, so stack them like on phones.
+        val stacked = compact || maxWidth < 860.dp
+        if (stacked) {
             Column {
                 stage(Modifier.fillMaxWidth())
-                AppDetails(app, index, compact = true, Modifier.padding(start = 8.dp, end = 8.dp, top = 28.dp, bottom = 12.dp))
+                AppDetails(
+                    app,
+                    index,
+                    compact = compact,
+                    if (compact) Modifier.padding(start = 8.dp, end = 8.dp, top = 28.dp, bottom = 12.dp)
+                    else Modifier.padding(horizontal = 28.dp, vertical = 32.dp),
+                )
             }
         } else {
             Row(verticalAlignment = Alignment.CenterVertically) {
